@@ -1,3 +1,6 @@
+const paragraph = document.querySelector("p");
+let count = 0;
+
 // setup canvas
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -38,7 +41,7 @@ class Ball extends Shape {
         ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
         ctx.fill();
     }
-    update() {
+    update() { //make ball reflect in display
         if ((this.x + this.size) >= width) {
             this.velX = -(this.velX);
         }
@@ -58,7 +61,7 @@ class Ball extends Shape {
         this.x += this.velX;
         this.y += this.velY;
     }
-    collisionDetect() {
+    collisionDetect() { //collision of this ball and other balls
         for (const ball of balls) {
             if (!(this === ball) && ball.exists) {
                 const dx = this.x - ball.x;
@@ -76,9 +79,9 @@ class Ball extends Shape {
 class EvilCircle extends Shape {
     constructor(x, y) {
         super(x, y, 20, 20);
-        this.color = rgb(255, 255, 255);
+        this.color = "white";
         this.size = 10;
-        window.addEventListener("keydown", (e) => {
+        window.addEventListener("keydown", (e) => { //wasd moving evil circle
             switch (e.key) {
                 case "a":
                     this.x -= this.velX;
@@ -102,7 +105,7 @@ class EvilCircle extends Shape {
         ctx.stroke();
         ctx.lineWidth = 3;
     }
-    checkBounds() {
+    checkBounds() { //to not let evil circle out of the display
         if ((this.x + this.size) >= width) {
             this.x -= this.size;
         }
@@ -119,15 +122,17 @@ class EvilCircle extends Shape {
             this.y += this.size;
         }
     }
-    collisionDetect() {
+    collisionDetect() { //collision of evil circle and other balls
         for (const ball of balls) {
             if (ball.exists) {
                 const dx = this.x - ball.x;
                 const dy = this.y - ball.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
+                const distance = Math.sqrt(dx * dx + dy * dy); //straight line distance equation
 
                 if (distance < this.size + ball.size) {
                     ball.exists = false;
+                    count--;
+                    paragraph.textContent = "Ball count: " + count;
                 }
             }
         }
@@ -150,7 +155,11 @@ while (balls.length < 25) {
     );
 
     balls.push(ball);
+    count++;
+    paragraph.textContent = "Ball count: " + count;
 }
+
+const evilcircle = new EvilCircle(random(0, width), random(0, height));
 
 function loop() {
     ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
@@ -164,12 +173,13 @@ function loop() {
         }
     }
 
-    const evilcircle = new EvilCircle(
-        200,
-        200
-    );
+    evilcircle.draw();
+    evilcircle.checkBounds();
+    evilcircle.collisionDetect();
 
-    requestAnimationFrame(loop);
+    requestAnimationFrame(loop); //i dont know
 }
 
-loop();  
+loop();
+
+//Source: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Adding_bouncing_balls_features
