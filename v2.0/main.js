@@ -66,7 +66,7 @@ class Ball extends Shape {
             if (!(this === ball) && ball.exists) {
                 const dx = this.x - ball.x;
                 const dy = this.y - ball.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
+                const distance = Math.sqrt(dx * dx + dy * dy); //straight line distance equation
 
                 if (distance < this.size + ball.size) {
                     ball.color = this.color = randomRGB();
@@ -127,7 +127,7 @@ class EvilCircle extends Shape {
             if (ball.exists) {
                 const dx = this.x - ball.x;
                 const dy = this.y - ball.y;
-                const distance = Math.sqrt(dx * dx + dy * dy); //straight line distance equation
+                const distance = Math.sqrt(dx * dx + dy * dy);
 
                 if (distance < this.size + ball.size) {
                     ball.exists = false;
